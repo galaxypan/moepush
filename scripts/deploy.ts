@@ -3,8 +3,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 const dbName = process.env.D1_DATABASE_NAME || 'moepush-db';
-const cloudflareApiToken = process.env.CLOUDFLARE_API_TOKEN;
-const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+const cloudflareApiToken = process.env.CLOUDFLARE_API_TOKEN || 'AN4ACDEA6hB6PKmrVpJ49ZeAtuUnqvLQ0gXoIeil';
+const accountId = process.env.CLOUDFLARE_ACCOUNT_ID || 'ae49f454d08be85362d7a4361670c677';
 const projectName = process.env.PROJECT_NAME || 'moepush';
 
 const setupWranglerConfig = () => {
@@ -23,7 +23,7 @@ const checkAndCreateDatabase = () => {
 
     const getDatabaseId = () => {
         const dbList = execSync('wrangler d1 list --json').toString();
-        const databases = JSON.parse(dbList);
+        const databases = JSON.parse(dbList.replace("Proxy environment variables detected. We'll use your proxy for fetch requests.",""));
         return databases.find((db: any) => db.name === dbName)?.uuid;
     }
 
@@ -55,13 +55,13 @@ const applyMigrations = () => {
 };
 
 const createPagesSecret = () => {
-    const envFilePath = path.resolve('.env');
-    const envVariables = [
-        `AUTH_SECRET=${process.env.AUTH_SECRET}`,
-        `AUTH_GITHUB_ID=${process.env.AUTH_GITHUB_ID}`,
-        `AUTH_GITHUB_SECRET=${process.env.AUTH_GITHUB_SECRET}`,
-    ];
-    fs.writeFileSync(envFilePath, envVariables.join('\n'));
+    // const envFilePath = path.resolve('.env');
+    // const envVariables = [
+    //     `AUTH_SECRET=${process.env.AUTH_SECRET}`,
+    //     `AUTH_GITHUB_ID=${process.env.AUTH_GITHUB_ID}`,
+    //     `AUTH_GITHUB_SECRET=${process.env.AUTH_GITHUB_SECRET}`,
+    // ];
+    // fs.writeFileSync(envFilePath, envVariables.join('\n'));
     execSync(`wrangler pages secret bulk .env`);
 };
 
@@ -82,7 +82,7 @@ const checkProjectExists = async () => {
         });
 
         if (!response.ok && response.status === 404) {
-            console.log(`Project ${projectName} does not exist. Creating...`);
+            console.log(`Project ${projectName} does not exist. Creating...${accountId}`);
             await createProject();
         } else {
             console.log(`Project ${projectName} already exists.`);

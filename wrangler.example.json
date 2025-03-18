@@ -13,7 +13,7 @@
     {
       "binding": "DB",
       "database_name": "moepush",
-      "database_id": "${D1_DATABASE_ID}",
+      "database_id": "187cb0c8-d610-4884-99be-edaa6540ec85",
       "migrations_dir": "./drizzle"
     }
   ]

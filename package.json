@@ -10,7 +10,9 @@
     "pages:build": "pnpm next-on-pages",
     "preview": "pnpm pages:build && wrangler pages dev",
     "deploy": "pnpm pages:build && wrangler pages deploy --branch main",
+    "deploy2": "pnpm dlx tsx scripts/deploy.ts",
     "db:migrate-local": "pnpm drizzle-kit generate && pnpm wrangler d1 migrations apply moepush --local",
+    "db:migrate-remote": "pnpm drizzle-kit generate && pnpm wrangler d1 migrations apply learn --remote",
     "tunnel": "pnpm dlx cloudflared tunnel --url http://localhost:3000"
   },
   "dependencies": {
